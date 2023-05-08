@@ -1,0 +1,76 @@
+import pygame
+
+# Initialize pygame
+pygame.init()
+
+# Define screen dimensions
+screen_width = 640
+screen_height = 480
+
+# Define paddle dimensions
+paddle_width = 10
+paddle_height = 50
+
+# Define ball dimensions
+ball_width = 10
+ball_height = 10
+
+# Define game colors
+black = (0, 0, 0)
+white = (255, 255, 255)
+
+# Create the game window
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Pong Game")
+
+# Create the paddles
+paddle1 = pygame.Rect(50, 215, paddle_width, paddle_height)
+paddle2 = pygame.Rect(580, 215, paddle_width, paddle_height)
+
+# Create the ball
+ball = pygame.Rect(312, 232, ball_width, ball_height)
+
+# Define the ball's initial velocity
+ball_velocity_x = 5
+ball_velocity_y = 5
+
+# Create the game loop
+while True:
+
+    # Handle events
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            quit()
+
+    # Move the paddles
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w] and paddle1.top > 0:
+        paddle1.top -= 5
+    if keys[pygame.K_s] and paddle1.bottom < screen_height:
+        paddle1.top += 5
+    if keys[pygame.K_UP] and paddle2.top > 0:
+        paddle2.top -= 5
+    if keys[pygame.K_DOWN] and paddle2.bottom < screen_height:
+        paddle2.top += 5
+
+    # Move the ball
+    ball.x += ball_velocity_x
+    ball.y += ball_velocity_y
+
+    # Bounce the ball off the walls
+    if ball.top <= 0 or ball.bottom >= screen_height:
+        ball_velocity_y = -ball_velocity_y
+    if ball.left <= 0 or ball.right >= screen_width:
+        ball_velocity_x = -ball_velocity_x
+
+    # Bounce the ball off the paddles
+    if ball.colliderect(paddle1) or ball.colliderect(paddle2):
+        ball_velocity_x = -ball_velocity_x
+
+    # Draw the game elements
+    screen.fill(black)
+    pygame.draw.rect(screen, white, paddle1)
+    pygame.draw.rect(screen, white, paddle2)
+    pygame.draw.ellipse(screen, white, ball)
+    pygame.display.update()
